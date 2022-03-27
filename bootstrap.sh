@@ -63,7 +63,7 @@ mkdir -p "${HOME}/git"
 
 LOCAL_PATH="${HOME}/git/salt-bootstrap"
 
-if [ ! -d "${LOCAL_PATH}" ]; then
+if [ ! -d "${LOCAL_PATH}/.git" ]; then
   echo "Checking out bootstrap repo"
   git clone "https://github.com/vemilyus/salt-bootstrap.git" "${LOCAL_PATH}"
 

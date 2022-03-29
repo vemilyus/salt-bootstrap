@@ -91,11 +91,10 @@ echo ""
 ### DOING THE WORK ###
 ######################
 
-set +e # We're fine with this failing
-chmod +x **/*.sh >/dev/null 2>&1
-set -e
+cd ./${SCRIPT_DIR}
+chmod +x ./bootstrap.sh
 
-./${SCRIPT_DIR}/bootstrap.sh
+./bootstrap.sh
 
 ###############
 ### CLEANUP ###

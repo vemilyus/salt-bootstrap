@@ -38,7 +38,7 @@ becho "> Preparing to install Salt"
 
 ## Need to add python-jinja to ignored packages when installing Salt, also to prevent upgrades
 ## to incompatible version
-if ! yes_or_no "> Has https://github.com/saltstack/salt/pull/61856 been merged?"; then
+if ! yes_or_no "> Has https://github.com/saltstack/salt/pull/61856 been released?"; then
   SALT_61856_MERGED=0
   if ! grep -E '^IgnorePkg\s+=.+?python-jinja' /etc/pacman.conf >/dev/null; then
     echo "Patching pacman.conf"
@@ -61,6 +61,7 @@ $PACMAN -S --needed salt
 
 copy_file etc/salt/master 0644
 copy_file etc/salt/minion 0644
+copy_file etc/salt/roster 0644
 
 #############################################
 ### INITIALIZING GPG KEYS FOR SALT PILLAR ###

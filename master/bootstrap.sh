@@ -20,12 +20,12 @@ check_binary "systemctl"
 
 if ! has_binary "gpg"; then
   becho "> Installing gpg"
-  $PACMAN -S --needed gpg
+  $PACMAN -Sy --needed gpg
 fi
 
 if ! has_binary "vim"; then
   becho "> Installing vim"
-  $PACMAN -S --needed vim
+  $PACMAN -Sy --needed vim
 fi
 
 echo ""
@@ -57,7 +57,7 @@ fi
 
 becho "> Installing Salt"
 
-$PACMAN -Sy --needed salt
+$PACMAN -Sy --needed salt python-pygit2
 
 copy_file etc/salt/master 0644
 copy_file etc/salt/minion 0644
@@ -68,6 +68,7 @@ copy_file etc/salt/roster 0644
 #############################################
 
 mkdir -p /etc/salt/gpgkeys
+chmod 700 /etc/salt/gpgkeys
 
 GPG="gpg --homedir /etc/salt/gpgkeys/"
 
@@ -180,6 +181,9 @@ fi
 
 systemctl enable salt-master
 systemctl enable salt-minion
+
+systemctl is-active salt-master
+systemctl is-active salt-minion
 
 bgecho "Salt master and minion started and enabled"
 

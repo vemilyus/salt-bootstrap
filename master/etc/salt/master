@@ -28,7 +28,7 @@
 #user: root
 
 # Tell the master to also use salt-ssh when running commands against minions.
-#enable_ssh_minions: False
+enable_ssh_minions: True
 
 # The port used by the communication interface. The ret (return) port is the
 # interface used for the file server, authentication, job returns, etc.
@@ -856,7 +856,7 @@ gitfs_remotes:
 #
 ext_pillar:
   - git:
-    - __env__ ssh://git@github.com/vemilyus/salt-pillar.git:
+    - main ssh://git@github.com/vemilyus/salt-pillar.git:
       - privkey: /root/.ssh/salt-pillar@salt-master
       - pubkey: /root/.ssh/salt-pillar@salt-master.pub
 #  - hiera: /etc/hiera.yaml
@@ -950,7 +950,7 @@ git_pillar_base: main
 
 # If the branch is omitted from a git_pillar remote, then this branch will
 # be used instead
-#git_pillar_branch: master
+git_pillar_branch: main
 
 # Environment to use for git_pillar remotes. This is normally derived from
 # the branch/tag (or from a per-remote env parameter), but if set this will

@@ -169,9 +169,17 @@ fi
 echo ""
 becho "> Starting salt master and minion"
 
+echo "  Waiting for salt-master to start"
+
 if ! systemctl start salt-master; then
   brecho "> Failed to start salt-master, entering journalctl -xe"
   journalctl -xe
+fi
+
+# Obviously a fake wait
+sleep 3
+if ! systemctl is-active salt-master >/dev/null; then
+  err_exit "Failed to start salt-master"
 fi
 
 if ! systemctl start salt-minion; then
@@ -179,13 +187,21 @@ if ! systemctl start salt-minion; then
   journalctl -xe
 fi
 
+if ! systemctl is-active salt-minion >/dev/null; then
+  err_exit "Failed to start salt-minion"
+fi
+
 systemctl enable salt-master
 systemctl enable salt-minion
 
-systemctl is-active salt-master
-systemctl is-active salt-minion
+becho "> Enrolling local salt-minion key"
+salt-key -A -y >/dev/null
 
-bgecho "Salt master and minion started and enabled"
+systemctl restart salt-minion
+
+if ! systemctl is-active salt-minion >/dev/null; then
+  err_exit "Failed to start salt-minion"
+fi
 
 echo ""
 echo "The Salt master is now ready to accept connections from minions"

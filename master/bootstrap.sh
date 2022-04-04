@@ -42,7 +42,7 @@ if ! yes_or_no "> Has https://github.com/saltstack/salt/pull/61856 been released
   SALT_61856_MERGED=""
   if ! grep -E '^IgnorePkg\s+=.+?python-jinja' /etc/pacman.conf >/dev/null; then
     echo "Patching pacman.conf"
-    echo -e "\nIgnorePkg = python-jinja\n" >>/etc/pacman.conf
+    sed -i -E "s/^#?(IgnorePkg\s+=.*$)/\1,python-jinja/" /etc/pacman.conf
   else
     bgecho "pacman.conf already patched"
   fi
@@ -57,7 +57,7 @@ fi
 
 becho "> Installing Salt"
 
-$PACMAN -S --needed salt
+$PACMAN -Sy --needed salt
 
 copy_file etc/salt/master 0644
 copy_file etc/salt/minion 0644

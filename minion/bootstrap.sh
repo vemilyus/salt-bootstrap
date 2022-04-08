@@ -66,6 +66,8 @@ fi
 
 copy_file etc/salt/minion 0644
 
+mkdir -p ~/.ssh
+touch ~/.ssh/known_hosts
 if ! grep 'github.com' ~/.ssh/known_hosts >/dev/null; then
   ssh-keyscan -H github.com >>~/.ssh/known_hosts
 fi

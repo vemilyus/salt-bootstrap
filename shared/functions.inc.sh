@@ -28,7 +28,7 @@ function has_binary() {
 function check_binary() {
   printf "Checking binary %s " $1
 
-  if ! which "$1" >/dev/null 2>&1; then
+  if ! has_binary $1; then
     err_exit "[ NOT FOUND ]"
   fi
 

@@ -820,6 +820,8 @@ gitfs_update_interval: 30 # seconds
 # Note: file:// repos will be treated as a remote, so refs you want used must
 # exist in that repo as *local* refs.
 gitfs_remotes:
+  - https://github.com/saltstack-formulas/alcali-formula:
+    - base: master
   - ssh://git@github.com/vemilyus/salt-states.git:
     - privkey: /root/.ssh/salt-states@salt-master
     - pubkey: /root/.ssh/salt-states@salt-master.pub

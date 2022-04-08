@@ -57,7 +57,7 @@ fi
 
 becho "> Installing Salt"
 
-$PACMAN -Sy --needed salt python-pygit2
+$PACMAN -Sy --needed salt python-pip python-pygit2
 
 copy_file etc/salt/master 0644
 copy_file etc/salt/minion 0644

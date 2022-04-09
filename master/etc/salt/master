@@ -406,6 +406,10 @@ external_auth:
   pam:
     wheel%:
       - '.*'
+  rest:
+    ^url: http://127.0.0.1:8000/api/token/verify/
+    wheel%:
+      - '.*'
 # Time (in seconds) for a newly generated token to live. Default: 12 hours
 #token_expire: 43200
 #

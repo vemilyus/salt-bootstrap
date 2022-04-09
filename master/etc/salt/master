@@ -1346,3 +1346,8 @@ git_pillar_branch: main
 ############################################
 # Allow the raw_shell parameter to be used when calling Salt SSH client via API
 #netapi_allow_raw_shell: True
+
+rest_cherrypy:
+  port: 8080
+  host: 127.0.0.1
+  disable_ssl: True

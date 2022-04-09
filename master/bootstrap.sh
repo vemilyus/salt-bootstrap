@@ -57,7 +57,8 @@ fi
 
 becho "> Installing Salt"
 
-$PACMAN -Sy --needed salt python-pip python-pygit2
+$PACMAN -Sy --needed salt python-pip python-pygit2 python-cherrypy
+pip install ws4py
 
 copy_file etc/salt/master 0644
 copy_file etc/salt/minion 0644
@@ -171,9 +172,11 @@ becho "> Starting salt master and minion"
 
 echo "  Waiting for salt-master to start"
 
-if ! systemctl start salt-master; then
+if ! systemctl restart salt-master; then
   brecho "> Failed to start salt-master, entering journalctl -xe"
   journalctl -xe
+
+  err_exit "Failed to start salt-master"
 fi
 
 # Obviously a fake wait
@@ -182,9 +185,20 @@ if ! systemctl is-active salt-master >/dev/null; then
   err_exit "Failed to start salt-master"
 fi
 
-if ! systemctl start salt-minion; then
+salt-run cache.clear_git_lock gitfs type=update
+
+if ! systemctl restart salt-api; then
+  brecho "> Failed to start salt-api, entering journalctl -xe"
+  journalctl -xe
+
+  err_exit "Failed to start salt-api"
+fi
+
+if ! systemctl restart salt-minion; then
   brecho "> Failed to start salt-minion, entering journalctl -xe"
   journalctl -xe
+
+  err_exit "Failed to start salt-minion"
 fi
 
 if ! systemctl is-active salt-minion >/dev/null; then
@@ -192,6 +206,7 @@ if ! systemctl is-active salt-minion >/dev/null; then
 fi
 
 systemctl enable salt-master
+systemctl enable salt-api
 systemctl enable salt-minion
 
 becho "> Enrolling local salt-minion key"

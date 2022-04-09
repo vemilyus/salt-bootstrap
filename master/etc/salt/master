@@ -407,7 +407,7 @@ external_auth:
     wheel%:
       - '.*'
   rest:
-    ^url: http://127.0.0.1:8000/api/token/verify/
+    ^url: http://127.0.0.1:8080/api/token/verify/
     wheel%:
       - '.*'
 # Time (in seconds) for a newly generated token to live. Default: 12 hours

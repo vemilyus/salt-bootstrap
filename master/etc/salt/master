@@ -827,9 +827,7 @@ gitfs_update_interval: 30 # seconds
 # Note: file:// repos will be treated as a remote, so refs you want used must
 # exist in that repo as *local* refs.
 gitfs_remotes:
-  - https://github.com/saltstack-formulas/postgres-formula:
-    - base: master
-  - https://github.com/saltstack-formulas/alcali-formula:
+  - https://github.com/erwindon/SaltGUI:
     - base: master
   - ssh://git@github.com/vemilyus/salt-states.git:
     - privkey: /root/.ssh/salt-states@salt-master
@@ -1354,5 +1352,5 @@ git_pillar_branch: main
 
 rest_cherrypy:
   port: 8080
-  host: 127.0.0.1
+  host: 0.0.0.0
   disable_ssl: True

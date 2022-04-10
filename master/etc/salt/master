@@ -1352,6 +1352,6 @@ rest_cherrypy:
   port: 8080
   host: 0.0.0.0
   disable_ssl: True
-  app: /srv/saltgui/index.html
-  static: /srv/saltgui/static
+  app: /srv/saltgui/saltgui/index.html
+  static: /srv/saltgui/saltgui/static
   static_path: /static

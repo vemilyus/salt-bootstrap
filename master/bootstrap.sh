@@ -57,7 +57,7 @@ fi
 
 becho "> Installing Salt"
 
-$PACMAN -Sy --needed salt python-pip python-pygit2 python-cherrypy
+$PACMAN -Sy --needed salt python-pip python-pygit2 python-cherrypy python-psutil
 pip -q install ws4py
 
 copy_file etc/salt/master 0644

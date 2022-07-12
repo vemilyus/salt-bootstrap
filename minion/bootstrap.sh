@@ -20,6 +20,7 @@ fi
 
 echo "[ OK ]"
 
+check_binary "gpg"
 check_binary "systemctl"
 
 echo ""

@@ -62,7 +62,7 @@ function copy_file() {
     mkdir -p "$TARGET_PARENT_DIR"
   fi
 
-  cp -i $SOURCE_FILE $TARGET_FILE
+  cp --reflink=never -i $SOURCE_FILE $TARGET_FILE
   chmod $2 $TARGET_FILE
 }
 

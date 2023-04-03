@@ -787,7 +787,7 @@ fileserver_backend:
 # order), and the first one with a compatible version installed will be the
 # provider that is used.
 #
-#gitfs_provider: pygit2
+gitfs_provider: pygit2
 gitfs_base: main
 gitfs_update_interval: 30 # seconds
 

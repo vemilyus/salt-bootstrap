@@ -100,7 +100,7 @@ systemctl enable salt-minion
 echo "  Waiting for salt-minion to start"
 
 # Obviously a fake wait
-sleep 3
+sleep 10
 
 systemctl status salt-minion > /tmp/salt-minion-status
 if grep "The master key has changed" /tmp/salt-minion-status >/dev/null; then

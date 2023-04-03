@@ -79,11 +79,12 @@ becho "> Installing Salt"
 if is_debian; then
   $INSTALL salt-master salt-minion salt-ssh salt-api libgit2-1.1
 
-  salt-pip install pygit2
+  salt-pip install gitpython
 elif is_arch; then
   $INSTALL salt python-pip python-pygit2 python-cherrypy python-psutil
 fi
 
+copy_file root/.ssh/config 0644
 copy_file etc/salt/master 0644
 copy_file etc/salt/minion 0644
 copy_file etc/salt/roster 0644

@@ -787,7 +787,7 @@ fileserver_backend:
 # order), and the first one with a compatible version installed will be the
 # provider that is used.
 #
-gitfs_provider: pygit2
+gitfs_provider: gitpython
 gitfs_base: main
 gitfs_update_interval: 30 # seconds
 
@@ -826,9 +826,7 @@ gitfs_update_interval: 30 # seconds
 # Note: file:// repos will be treated as a remote, so refs you want used must
 # exist in that repo as *local* refs.
 gitfs_remotes:
-  - ssh+git://git@github.com/vemilyus/salt-states.git:
-    - privkey: /root/.ssh/salt-states@salt-master
-    - pubkey: /root/.ssh/salt-states@salt-master.pub
+  - main ssh://github-states/vemilyus/salt-states.git
 #  - file:///var/git/saltmaster
 #
 # The gitfs_ssl_verify option specifies whether to ignore ssl certificate
@@ -862,10 +860,8 @@ gitfs_remotes:
 #
 ext_pillar:
   - git:
-    - ssh+git://git@github.com/vemilyus/salt-pillar.git:
+    - main ssh://github-pillar/vemilyus/salt-pillar.git:
       - env: base
-      - privkey: /root/.ssh/salt-pillar@salt-master
-      - pubkey: /root/.ssh/salt-pillar@salt-master.pub
 #  - hiera: /etc/hiera.yaml
 #  - cmd_yaml: cat /etc/salt/yaml
 

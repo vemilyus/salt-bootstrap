@@ -77,7 +77,7 @@ fi
 becho "> Installing Salt"
 
 if is_debian; then
-  $INSTALL salt-master salt-minion salt-ssh salt-api python-pygit2
+  $INSTALL salt-master salt-minion salt-ssh salt-api python3-pygit2
 elif is_arch; then
   $INSTALL salt python-pip python-pygit2 python-cherrypy python-psutil
 fi

@@ -84,7 +84,7 @@ elif is_arch; then
   $INSTALL salt python-pip python-pygit2 python-cherrypy python-psutil
 fi
 
-copy_file root/.ssh/config 0644
+copy_file root/.ssh/config 0600
 copy_file etc/salt/master 0644
 copy_file etc/salt/minion 0644
 copy_file etc/salt/roster 0644

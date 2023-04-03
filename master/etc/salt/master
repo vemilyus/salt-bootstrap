@@ -862,7 +862,7 @@ gitfs_remotes:
 #
 ext_pillar:
   - git:
-    - main git://github.com/vemilyus/salt-pillar.git:
+    - git://github.com/vemilyus/salt-pillar.git:
       - env: base
       - privkey: /root/.ssh/salt-pillar@salt-master
       - pubkey: /root/.ssh/salt-pillar@salt-master.pub

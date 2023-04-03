@@ -862,7 +862,6 @@ ext_pillar:
   - git:
     - ssh://github-pillar/vemilyus/salt-pillar.git:
       - env: base
-      - update_interval: 10
 #  - hiera: /etc/hiera.yaml
 #  - cmd_yaml: cat /etc/salt/yaml
 
@@ -955,6 +954,8 @@ git_pillar_provider: gitpython
 # If the branch is omitted from a git_pillar remote, then this branch will
 # be used instead
 git_pillar_branch: main
+
+git_pillar_update_interval: 10
 
 # Environment to use for git_pillar remotes. This is normally derived from
 # the branch/tag (or from a per-remote env parameter), but if set this will

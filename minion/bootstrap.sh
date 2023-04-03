@@ -82,7 +82,7 @@ fi
 echo ""
 becho "> Starting Salt minion"
 
-if ! systemctl start salt-minion; then
+if ! systemctl restart salt-minion; then
   brecho "> Failed to start salt-minion, entering journalctl -xe"
   journalctl -xe
 fi

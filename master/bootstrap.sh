@@ -89,6 +89,27 @@ copy_file etc/salt/master 0644
 copy_file etc/salt/minion 0644
 copy_file etc/salt/roster 0644
 
+##############################
+### GENERATING MASTER KEYS ###
+##############################
+
+if [ ! -f /etc/salt/pki/master/master.pem ]; then
+  becho "> Generating master keys"
+
+  OLD_PWD=$(pwd)
+
+  mkdir -p /etc/salt/pki/master
+  cd $_
+
+  salt-key --gen-keys=master
+
+  cd $OLD_PWD
+
+  becho "Now you need to change this key in all the minions"
+
+  wait_for_enter
+fi
+
 #############################################
 ### INITIALIZING GPG KEYS FOR SALT PILLAR ###
 #############################################

@@ -722,7 +722,7 @@ master: salt-master.2.v47.dev
 # Fingerprint of the master public key to validate the identity of your Salt master
 # before the initial key exchange. The master fingerprint can be found by running
 # "salt-key -f master.pub" on the Salt master.
-master_finger: 'd2:3f:1d:1b:08:ca:7c:73:97:db:7f:fc:00:3e:b2:bc:b3:3a:af:96:43:82:a5:b6:36:c4:a4:3d:fb:c7:07:2c'
+master_finger: '21:e5:52:8f:dc:e3:5e:43:f9:d2:5f:53:2d:57:27:32:a9:65:a8:33:24:ad:2d:e6:e3:32:e3:a0:92:29:71:b2'
 
 # Use TLS/SSL encrypted connection between master and minion.
 # Can be set to a dictionary containing keyword arguments corresponding to Python's

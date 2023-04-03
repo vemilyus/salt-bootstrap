@@ -97,6 +97,11 @@ systemctl enable salt-minion
 ### RESETTING MASTER KEY ###
 ############################
 
+echo "  Waiting for salt-minion to start"
+
+# Obviously a fake wait
+sleep 3
+
 systemctl status salt-minion > /tmp/salt-minion-status
 if grep "The master key has changed" /tmp/salt-minion-status >/dev/null; then
   becho "> Removing stale salt-master key"

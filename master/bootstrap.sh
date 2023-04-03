@@ -184,7 +184,7 @@ if [ -z $HAS_SSH_KEYS ]; then
 fi
 
 if ! grep 'github.com' ~/.ssh/known_hosts >/dev/null; then
-  ssh-keyscan -H github.com >>~/.ssh/known_hosts
+  ssh-keyscan github.com >>~/.ssh/known_hosts
 fi
 
 ###############################

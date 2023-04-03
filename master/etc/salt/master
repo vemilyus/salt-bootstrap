@@ -826,7 +826,7 @@ gitfs_update_interval: 30 # seconds
 # Note: file:// repos will be treated as a remote, so refs you want used must
 # exist in that repo as *local* refs.
 gitfs_remotes:
-  - ssh://git@github.com/vemilyus/salt-states.git:
+  - ssh+git://git@github.com/vemilyus/salt-states.git:
     - privkey: /root/.ssh/salt-states@salt-master
     - pubkey: /root/.ssh/salt-states@salt-master.pub
 #  - file:///var/git/saltmaster
@@ -862,7 +862,7 @@ gitfs_remotes:
 #
 ext_pillar:
   - git:
-    - ssh://git@github.com/vemilyus/salt-pillar.git:
+    - ssh+git://git@github.com/vemilyus/salt-pillar.git:
       - env: base
       - privkey: /root/.ssh/salt-pillar@salt-master
       - pubkey: /root/.ssh/salt-pillar@salt-master.pub

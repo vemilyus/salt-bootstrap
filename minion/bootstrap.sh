@@ -97,7 +97,8 @@ systemctl enable salt-minion
 ### RESETTING MASTER KEY ###
 ############################
 
-if systemctl status salt-minion | grep "The master key has changed"; then
+systemctl status salt-minion > /tmp/salt-minion-status
+if grep "The master key has changed" /tmp/salt-minion-status >/dev/null; then
   becho "> Removing stale salt-master key"
 
   rm /etc/salt/pki/minion/minion_master.pub

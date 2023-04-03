@@ -755,7 +755,6 @@ renderer: jinja|yaml|gpg
 # To use multiple backends list them in the order they are searched:
 fileserver_backend:
   - gitfs
-  - roots
 #
 # Uncomment the line below if you do not want the file_server to follow
 # symlinks when walking the filesystem tree. This is set to True
@@ -827,7 +826,7 @@ gitfs_update_interval: 30 # seconds
 # Note: file:// repos will be treated as a remote, so refs you want used must
 # exist in that repo as *local* refs.
 gitfs_remotes:
-  - ssh://git@github.com/vemilyus/salt-states.git:
+  - git://github.com/vemilyus/salt-states.git:
     - privkey: /root/.ssh/salt-states@salt-master
     - pubkey: /root/.ssh/salt-states@salt-master.pub
 #  - file:///var/git/saltmaster
@@ -863,7 +862,7 @@ gitfs_remotes:
 #
 ext_pillar:
   - git:
-    - main ssh://git@github.com/vemilyus/salt-pillar.git:
+    - main git://github.com/vemilyus/salt-pillar.git:
       - env: base
       - privkey: /root/.ssh/salt-pillar@salt-master
       - pubkey: /root/.ssh/salt-pillar@salt-master.pub

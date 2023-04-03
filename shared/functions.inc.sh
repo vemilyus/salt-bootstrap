@@ -21,6 +21,14 @@ function err_exit() {
   exit 1
 }
 
+function is_debian() {
+  [ -f "/etc/debian_version" ]
+}
+
+function is_arch() {
+  [ -f "/etc/arch-release" ]
+}
+
 function has_binary() {
   which "$1" >/dev/null 2>&1
 }

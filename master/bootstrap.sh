@@ -4,7 +4,14 @@ set -e +x -uo pipefail # Exit after failed command but don't print commands
 
 . ../shared/functions.inc.sh
 
+APT="apt-get -qq -y"
 PACMAN="pacman --color=always --noconfirm --noprogressbar"
+
+if is_debian; then
+  INSTALL="$APT install"
+elif is_arch; then
+  INSTALL="$PACMAN -Sy --needed"
+fi
 
 #####################
 ### PREREQUISITES ###
@@ -12,20 +19,40 @@ PACMAN="pacman --color=always --noconfirm --noprogressbar"
 
 becho "> Checking prerequisites:"
 
-check_binary "pacman"
-check_binary "ssh"
-check_binary "ssh-keygen"
-check_binary "ssh-keyscan"
+if is_debian; then
+  echo "Debian detected"
+elif is_arch; then
+  echo "Arch Linux detected"
+else
+  err_exit "Unknown OS"
+fi
+
+if is_debian; then
+  check_binary "apt-get"
+elif is_arch; then
+  check_binary "pacman"
+fi
+
 check_binary "systemctl"
+
+if ! has_binary "ssh"; then
+  becho "> Installing OpenSSH"
+  $INSTALL openssh
+fi
+
+if ! has_binary "curl"; then
+  becho "> Installing curl"
+  $INSTALL curl
+fi
 
 if ! has_binary "gpg"; then
   becho "> Installing gpg"
-  $PACMAN -Sy --needed gpg
+  $INSTALL gpg
 fi
 
 if ! has_binary "vim"; then
   becho "> Installing vim"
-  $PACMAN -Sy --needed vim
+  $INSTALL vim
 fi
 
 echo ""
@@ -36,28 +63,24 @@ echo ""
 
 becho "> Preparing to install Salt"
 
-## Need to add python-jinja to ignored packages when installing Salt, also to prevent upgrades
-## to incompatible version
-if ! yes_or_no "> Has https://github.com/saltstack/salt/pull/61856 been released?"; then
-  SALT_61856_MERGED=""
-  if ! grep -E '^IgnorePkg\s+=.+?python-jinja' /etc/pacman.conf >/dev/null; then
-    echo "Patching pacman.conf"
-    sed -i -E "s/^#?(IgnorePkg\s+=.*$)/\1,python-jinja/" /etc/pacman.conf
-  else
-    bgecho "pacman.conf already patched"
-  fi
-else
-  SALT_61856_MERGED=1
-fi
+if is_debian; then
+  source /etc/os-release
 
-if [ -z "$SALT_61856_MERGED" ]; then
-  becho "> Installing compatible older version of python-jinja"
-  $PACMAN -U https://archive.archlinux.org/packages/p/python-jinja/python-jinja-3.0.3-3-any.pkg.tar.zst
+  mkdir -p /etc/apt/keyrings
+
+  curl -fsSL -o "/etc/apt/keyrings/salt-archive-keyring.gpg https://repo.saltproject.io/salt/py3/debian/$VERSION_ID/amd64/latest/salt-archive-keyring.gpg"
+  echo "deb [signed-by=/etc/apt/keyrings/salt-archive-keyring.gpg arch=amd64] https://repo.saltproject.io/salt/py3/debian/$VERSION_ID/amd64/latest $VERSION_CODENAME main" | tee /etc/apt/sources.list.d/salt.list
+
+  $APT update
 fi
 
 becho "> Installing Salt"
 
-$PACMAN -Sy --needed salt python-pip python-pygit2 python-cherrypy python-psutil
+if is_debian; then
+  $INSTALL salt-master salt-minion salt-ssh salt-api
+elif is_arch; then
+  $INSTALL salt python-pip python-pygit2 python-cherrypy python-psutil
+fi
 
 copy_file etc/salt/master 0644
 copy_file etc/salt/minion 0644

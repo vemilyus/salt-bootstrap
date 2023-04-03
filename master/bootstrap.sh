@@ -187,6 +187,8 @@ if ! grep 'github.com' ~/.ssh/known_hosts >/dev/null; then
   ssh-keyscan github.com >>~/.ssh/known_hosts
 fi
 
+chmod 600 ~/.ssh/known_hosts
+
 ###############################
 ### FINAL START-UP SEQUENCE ###
 ###############################

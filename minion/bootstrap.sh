@@ -4,8 +4,14 @@ set -e +x -uo pipefail # Exit after failed command but don't print commands
 
 . ../shared/functions.inc.sh
 
-APT="apt-get -qq"
+APT="apt-get -qq -y"
 PACMAN="pacman --color=always --noconfirm --noprogressbar"
+
+if is_debian; then
+  INSTALL="$APT install"
+elif is_arch; then
+  INSTALL="$PACMAN -Sy --needed"
+fi
 
 #####################
 ### PREREQUISITES ###
@@ -13,24 +19,28 @@ PACMAN="pacman --color=always --noconfirm --noprogressbar"
 
 becho "> Checking prerequisites:"
 
-printf "Checking binary apt or pacman"
-if ! has_binary "apt" && ! has_binary "pacman"; then
-  err_exit "[ NOT FOUND ]"
+if is_debian; then
+  echo "Debian detected"
+elif is_arch; then
+  echo "Arch Linux detected"
+else
+  err_exit "Unknown OS"
 fi
 
-echo "[ OK ]"
+if is_debian; then
+  check_binary "apt-get"
+elif is_arch; then
+  check_binary "pacman"
+fi
 
-check_binary "gpg"
+if ! has_binary "gpg"; then
+  becho "> Installing gpg"
+  $INSTALL gpg
+fi
+
 check_binary "systemctl"
 
 echo ""
-
-OS_ARCH=""
-if grep -i arch /etc/os-release >/dev/null 2>&1; then
-  OS_ARCH="y"
-else
-  $APT update
-fi
 
 #######################
 ### INSTALLING SALT ###
@@ -38,31 +48,23 @@ fi
 
 becho "> Preparing to install Salt"
 
-## Need to add python-jinja to ignored packages when installing Salt, also to prevent upgrades
-## to incompatible version
-if [ ! -z "$OS_ARCH" ] && ! yes_or_no "> Has https://github.com/saltstack/salt/pull/61856 been released?"; then
-  SALT_61856_MERGED=""
-  if ! grep -E '^IgnorePkg\s+=.+?python-jinja' /etc/pacman.conf >/dev/null; then
-    echo "Patching pacman.conf"
-    sed -i -E "s/^#?(IgnorePkg\s+=.*$)/\1,python-jinja/" /etc/pacman.conf
-  else
-    bgecho "pacman.conf already patched"
-  fi
-else
-  SALT_61856_MERGED="y"
-fi
+if is_debian; then
+  source /etc/os-release
 
-if [ -z "$SALT_61856_MERGED" ]; then
-  becho "> Installing compatible older version of python-jinja"
-  $PACMAN -U https://archive.archlinux.org/packages/p/python-jinja/python-jinja-3.0.3-3-any.pkg.tar.zst
+  mkdir -p /etc/apt/keyrings
+
+  curl -fsSL -o /etc/apt/keyrings/salt-archive-keyring.gpg "https://repo.saltproject.io/salt/py3/debian/$VERSION_ID/amd64/latest/salt-archive-keyring.gpg"
+  echo "deb [signed-by=/etc/apt/keyrings/salt-archive-keyring.gpg arch=amd64] https://repo.saltproject.io/salt/py3/debian/$VERSION_ID/amd64/latest $VERSION_CODENAME main" | tee /etc/apt/sources.list.d/salt.list
+
+  $APT update
 fi
 
 becho "> Installing Salt (Minion)"
 
-if [ -z "$OS_ARCH" ]; then
-  $APT install salt-minion python-pip-whl
-else
-  $PACMAN -Sy --needed salt python-pip
+if is_debian; then
+  $INSTALL salt-minion
+elif is_arch; then
+  $INSTALL salt python-pip
 fi
 
 copy_file etc/salt/minion 0644
@@ -70,7 +72,7 @@ copy_file etc/salt/minion 0644
 mkdir -p ~/.ssh
 touch ~/.ssh/known_hosts
 if ! grep 'github.com' ~/.ssh/known_hosts >/dev/null; then
-  ssh-keyscan -H github.com >>~/.ssh/known_hosts
+  ssh-keyscan github.com >>~/.ssh/known_hosts
 fi
 
 ###############################
@@ -90,6 +92,18 @@ if ! systemctl is-active salt-minion >/dev/null; then
 fi
 
 systemctl enable salt-minion
+
+############################
+### RESETTING MASTER KEY ###
+############################
+
+if systemctl status salt-minion | grep "The master key has changed"; then
+  becho "> Removing stale salt-master key"
+
+  rm /etc/salt/pki/minion/minion_master.pub
+
+  systemctl restart salt-minion
+fi
 
 echo ""
 echo "The Salt minion is now ready. Make sure to enroll its key in the Master before pressing enter."

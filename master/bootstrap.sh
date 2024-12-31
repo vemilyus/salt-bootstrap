@@ -63,26 +63,10 @@ echo ""
 
 becho "> Preparing to install Salt"
 
-if is_debian; then
-  source /etc/os-release
-
-  mkdir -p /etc/apt/keyrings
-
-  curl -fsSL -o /etc/apt/keyrings/salt-archive-keyring-2023.gpg https://repo.saltproject.io/salt/py3/debian/$VERSION_ID/amd64/SALT-PROJECT-GPG-PUBKEY-2023.gpg
-  echo "deb [signed-by=/etc/apt/keyrings/salt-archive-keyring-2023.gpg arch=amd64] https://repo.saltproject.io/salt/py3/debian/$VERSION_ID/amd64/latest $VERSION_CODENAME main" | tee /etc/apt/sources.list.d/salt.list
-
-  $APT update
-fi
-
 becho "> Installing Salt"
 
-if is_debian; then
-  $INSTALL salt-master salt-minion salt-ssh salt-api
-
-  salt-pip install gitpython
-elif is_arch; then
-  $INSTALL salt python-pip python-gitpython python-cherrypy python-psutil
-fi
+curl -L https://github.com/saltstack/salt-bootstrap/releases/latest/download/bootstrap-salt.sh > bootstrap-salt.sh
+sh ./bootstrap-salt.sh -d -M -W -X stable
 
 copy_file root/.ssh/config 0600
 copy_file etc/salt/master 0644

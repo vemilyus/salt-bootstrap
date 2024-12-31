@@ -4,39 +4,11 @@ set -e +x -uo pipefail # Exit after failed command but don't print commands
 
 . ../shared/functions.inc.sh
 
-APT="apt-get -qq -y"
-PACMAN="pacman --color=always --noconfirm --noprogressbar"
-
-if is_debian; then
-  INSTALL="$APT install"
-elif is_arch; then
-  INSTALL="$PACMAN -Sy --needed"
-fi
-
 #####################
 ### PREREQUISITES ###
 #####################
 
 becho "> Checking prerequisites:"
-
-if is_debian; then
-  echo "Debian detected"
-elif is_arch; then
-  echo "Arch Linux detected"
-else
-  err_exit "Unknown OS"
-fi
-
-if is_debian; then
-  check_binary "apt-get"
-elif is_arch; then
-  check_binary "pacman"
-fi
-
-if ! has_binary "gpg"; then
-  becho "> Installing gpg"
-  $INSTALL gpg
-fi
 
 check_binary "systemctl"
 
@@ -48,24 +20,9 @@ echo ""
 
 becho "> Preparing to install Salt"
 
-if is_debian; then
-  source /etc/os-release
-
-  mkdir -p /etc/apt/keyrings
-
-  curl -fsSL -o /etc/apt/keyrings/salt-archive-keyring-2023.gpg https://repo.saltproject.io/salt/py3/debian/$VERSION_ID/amd64/SALT-PROJECT-GPG-PUBKEY-2023.gpg
-  echo "deb [signed-by=/etc/apt/keyrings/salt-archive-keyring-2023.gpg arch=amd64] https://repo.saltproject.io/salt/py3/debian/$VERSION_ID/amd64/latest $VERSION_CODENAME main" | tee /etc/apt/sources.list.d/salt.list
-
-  $APT update
-fi
-
 becho "> Installing Salt (Minion)"
 
-if is_debian; then
-  $INSTALL salt-minion
-elif is_arch; then
-  $INSTALL salt python-pip
-fi
+curl -L https://github.com/saltstack/salt-bootstrap/releases/latest/download/bootstrap-salt.sh | sh -s -- -d -X onedir
 
 copy_file etc/salt/minion 0644
 

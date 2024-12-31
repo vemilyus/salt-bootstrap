@@ -22,7 +22,7 @@ becho "> Preparing to install Salt"
 
 becho "> Installing Salt (Minion)"
 
-curl -L https://github.com/saltstack/salt-bootstrap/releases/latest/download/bootstrap-salt.sh | sh -s -- -d -X onedir
+curl -L https://github.com/saltstack/salt-bootstrap/releases/download/v2024.12.12/bootstrap-salt.sh | sh -s -- -d -X onedir
 
 copy_file etc/salt/minion 0644
 

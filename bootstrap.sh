@@ -12,6 +12,10 @@ function err_exit() {
   exit 1
 }
 
+function is_debian() {
+  [ -f "/etc/debian_version" ]
+}
+
 function check_binary() {
   printf "Checking binary %s " $1
 
@@ -45,6 +49,11 @@ esac
 #####################
 ### PREREQUISITES ###
 #####################
+
+if is_debian; then
+  echo "Debian detected, autoinstalling git and curl"
+  apt update && apt install -y git curl
+fi
 
 echo "Checking out bootstrap repo"
 echo ""
